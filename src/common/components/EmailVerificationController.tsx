@@ -1,5 +1,5 @@
 import { lookupService } from "@/common/lib/client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { usePartnerContext } from "./PartnerModel";
 
 const useEmailVerification = () => {
@@ -11,13 +11,14 @@ const useEmailVerification = () => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [showEmailValidation, setShowEmailValidation] = useState(false);
-  const [showOTPField, setShowOTPField] = useState(false);
+  const [showPhoneValidation, setShowPhoneValidation] = useState(false);
   const [showInvalidKey, setShowInvalidKey] = useState(false);
   const [open, setOpen] = useState(false);
   const { channelId } = usePartnerContext();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = React.useState(false);
   const [connection, setConnection] = useState<string | undefined>();
+  const phoneInputRef = useRef<HTMLInputElement>(null);
   const svc = lookupService("OTPService");
 
   const formatPhoneNumber = (input: string) => {
@@ -40,9 +41,17 @@ const useEmailVerification = () => {
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
+    const cursorPosition = e.target.selectionStart;
+
     const formattedPhoneNumber = formatPhoneNumber(input);
     setPhoneNumber(formattedPhoneNumber);
     checkFormEmptiness(emailAddress, formattedPhoneNumber);
+
+    setTimeout(() => {
+      if (phoneInputRef.current) {
+        phoneInputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    }, 0);
   };
 
   const handleOTPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +75,14 @@ const useEmailVerification = () => {
 
   const handleEmailClick = async () => {
     setLoading(true);
+    setShowPhoneValidation(false);
+    const phoneNum = phoneNumber.replace(/\D/g, "");
     if (emailAddress.trim() === "") {
       setShowEmailValidation(true);
+      setLoading(false);
+      return;
+    } else if (phoneNum.length > 0 && phoneNum.length < 11) {
+      setShowPhoneValidation(true);
       setLoading(false);
       return;
     } else {
@@ -75,7 +90,7 @@ const useEmailVerification = () => {
       conn = conn === undefined ? "epayment" : conn;
       const otp = await svc?.invoke("generateOtp", {
         partnerid: channelId,
-        contact: { email: emailAddress },
+        contact: { email: emailAddress, phone: phoneNumber },
         connection: conn,
       });
       setKey(otp.key);
@@ -84,6 +99,7 @@ const useEmailVerification = () => {
     }
     setLoading(false);
   };
+
   const handleOtpClick = async (onSuccess: any) => {
     setLoading(true);
     if (otp.trim().length !== 6) {
@@ -111,7 +127,8 @@ const useEmailVerification = () => {
     } else if (currentStep === 2) {
       setShowInvalidKey(false);
       setCurrentStep(1);
-      setOtp("");
+      setEmailAddress("");
+      setPhoneNumber("");
     }
   };
 
@@ -151,7 +168,7 @@ const useEmailVerification = () => {
     if (!values.phoneNumber) {
       errors.phoneNumber = "Phone number is required";
     }
-    if (!values.otp && showOTPField) {
+    if (!values.otp) {
       errors.otp = "OTP is required";
     }
 
@@ -161,6 +178,7 @@ const useEmailVerification = () => {
   return {
     emailAddress,
     phoneNumber,
+    phoneInputRef,
     otp,
     open,
     onSubmit,
@@ -171,7 +189,7 @@ const useEmailVerification = () => {
     isEmailFocused,
     isValidEmail,
     showEmailValidation,
-    showOTPField,
+    showPhoneValidation,
     showInvalidKey,
     handleClickOpen,
     handleClose,

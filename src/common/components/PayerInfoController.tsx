@@ -1,13 +1,12 @@
-import { lookupService } from "@/common/lib/client";
 import React, { useState } from "react";
 
-const PaymentInfoController = () => {
+const PayerInfoController = () => {
   const [payerName, setPayerName] = useState("");
   const [payerAddr, setPayerAddr] = useState("");
   const [payerNameError, setPayerNameError] = useState(false);
   const [payerAddrError, setPayerAddrError] = useState(false);
   const [loading, setLoading] = React.useState(false);
-  const svc = lookupService("WaterService");
+  const [billAmount, setBillAmount] = useState<number>();
 
   const handlePayerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPayerName(e.target.value);
@@ -50,6 +49,8 @@ const PaymentInfoController = () => {
     onSubmit,
     payerName,
     payerAddr,
+    billAmount,
+    setBillAmount,
     payerNameError,
     payerAddrError,
     handlePayerNameChange,
@@ -58,4 +59,4 @@ const PaymentInfoController = () => {
     handleBackClick,
   };
 };
-export default PaymentInfoController;
+export default PayerInfoController;

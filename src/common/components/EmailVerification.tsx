@@ -53,6 +53,7 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
     currentStep,
     loading,
     showEmailValidation,
+    showPhoneValidation,
     showInvalidKey,
     handleEmailAddressChange,
     handlePhoneNumberChange,
@@ -66,6 +67,7 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
     handleClose,
     handleResendOTP,
     setConnection,
+    phoneInputRef,
   } = useEmailVerification();
 
   useEffect(() => {
@@ -143,6 +145,7 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
                       render={({ input, meta }) => (
                         <TextField
                           {...input}
+                          error={showPhoneValidation}
                           placeholder="(0000) 000-0000"
                           label="Mobile No."
                           variant="standard"
@@ -153,6 +156,12 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
                             shrink: true,
                           }}
                           className="w-full"
+                          inputRef={phoneInputRef}
+                          helperText={
+                            showPhoneValidation
+                              ? "Incorrect entry phone format."
+                              : ""
+                          }
                         />
                       )}
                     />

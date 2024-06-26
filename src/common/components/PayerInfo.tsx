@@ -7,21 +7,23 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import { Field, Form } from "react-final-form";
-import PaymentInfoController from "./PayerInfoController";
+import Currency from "./Currency";
+import PayerInfoController from "./PayerInfoController";
 
-interface PaymentInfoProps {
+interface PayerInfoProps {
   moduleTitle: string;
+  onSuccess: () => void;
+  onCancel: () => void;
   subTitle?: string;
   description?: string;
   onChangeAccount?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSuccess: () => void;
-  onCancel: () => void;
+  billAmount: number;
 }
 
-const PaymentInfo: React.FC<PaymentInfoProps> = ({
+const PayerInfo: React.FC<PayerInfoProps> = ({
   moduleTitle,
   onCancel,
-  onSuccess,
+  billAmount,
 }) => {
   const {
     loading,
@@ -33,10 +35,11 @@ const PaymentInfo: React.FC<PaymentInfoProps> = ({
     handlePayerNameChange,
     handlePayerAddrChange,
     handleNextClick,
-  } = PaymentInfoController();
+  } = PayerInfoController();
 
-  let descriptionText = "Payment Information";
-  let subTitleText = "Please fill in the Payer Name and Payer Address";
+  let subTitleText = "Confirm Transaction";
+  let descriptionText =
+    "Please confirm by filling in the name and address of the Payer for your electronic Official Receipt. Click Continue to proceed with payment.";
 
   const ariaLabel = { "aria-label": "description" };
 
@@ -54,7 +57,7 @@ const PaymentInfo: React.FC<PaymentInfoProps> = ({
         <Form
           onSubmit={onSubmit}
           render={({ handleSubmit }) => (
-            <form
+            <div
               className="flex flex-col items-start justify-start gap-5"
               onSubmit={handleSubmit}
             >
@@ -98,6 +101,16 @@ const PaymentInfo: React.FC<PaymentInfoProps> = ({
                       />
                     )}
                   />
+                  <div className="flex flex-col justify-center items-center gap-y-4">
+                    <p>Payment Details</p>
+                    <div className="w-full border border-black font-bold p-4">
+                      <Currency
+                        classname="flex justify-center"
+                        currency="Php"
+                        amount={billAmount || 0}
+                      />
+                    </div>
+                  </div>
                 </>
               </div>
               <>
@@ -125,11 +138,11 @@ const PaymentInfo: React.FC<PaymentInfoProps> = ({
                     variant="outlined"
                     className="bg-[#6200EE] !text-white font-bold hover:bg-[#7319f0] hover:shadow-[0_3px_6px_0_rgba(0,0,0,0.3)] duration-200"
                   >
-                    Next
+                    Continue
                   </LoadingButton>
                 </div>
               </>
-            </form>
+            </div>
           )}
         />
       </div>
@@ -149,4 +162,4 @@ const PaymentInfo: React.FC<PaymentInfoProps> = ({
   );
 };
 
-export default PaymentInfo;
+export default PayerInfo;
