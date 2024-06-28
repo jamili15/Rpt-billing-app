@@ -23,5 +23,8 @@
     "app.context": "etracs25",
     "handler": "script",
     "readTimeout": 60000
+  },
+  "epayment": {
+    "app.host": "${NEXT_PUBLIC_CLOUD_EPAYMENT_HOST}"
   }
 }

@@ -4,7 +4,7 @@ interface CurrencyComponentProps {
   amount: number | string;
   currency?: string;
   caption?: string;
-  classname?: string;
+  className?: string;
   decimal?: number;
 }
 
@@ -12,7 +12,7 @@ const Currency: React.FC<CurrencyComponentProps> = ({
   amount,
   currency,
   caption,
-  classname,
+  className,
   decimal = 2,
 }) => {
   const formattedAmount = () => {
@@ -23,9 +23,7 @@ const Currency: React.FC<CurrencyComponentProps> = ({
       return "Invalid Amount";
     }
 
-    const decimalPlaces = (numericAmount.toString().split(".")[1] || []).length;
-
-    const options = {
+    const options: Intl.NumberFormatOptions = {
       style: currency ? "currency" : "decimal",
       currency: currency === "Php" || currency === "USD" ? currency : undefined,
       minimumFractionDigits: decimal,
@@ -40,11 +38,11 @@ const Currency: React.FC<CurrencyComponentProps> = ({
   return (
     <>
       {caption && (
-        <span className={`pr-5 uppercase font-bold ${classname}`}>
+        <span className={`pr-5 uppercase font-bold ${className}`}>
           {caption} :
         </span>
       )}
-      <div className={`${classname}`}>{formattedAmount()}</div>
+      <div className={`${className}`}>{formattedAmount()}</div>
     </>
   );
 };

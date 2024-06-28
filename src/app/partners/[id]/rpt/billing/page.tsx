@@ -6,13 +6,13 @@ import PayerInfo from "@/common/components/PayerInfo";
 import MasterLayout from "@/common/layouts/MasterLayout";
 import { lookupService } from "@/common/lib/client";
 import RptBilling from "@/components/RptBilling";
+import { useBillingContext } from "@/components/RptContextController";
 import { useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { title, setId, resources } = usePartnerContext();
   const [step, setStep] = useState<string>("billing");
-  const { channelId } = usePartnerContext();
-  const svc = lookupService("RealTaxBillingService");
+  const { bill } = useBillingContext();
 
   const handler = () => {
     if (step === "email") {
@@ -57,6 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
           moduleTitle={moduleTitle}
           onSuccess={() => {}}
           onCancel={onCancel}
+          billAmount={bill?.amount ?? 0}
         />
       )}
     </MasterLayout>

@@ -22,6 +22,7 @@ interface BillingInfoContext {
   setStep: (value: string) => void;
   setBill: (value: Bill | null) => void;
   setOpen: (value: boolean) => void;
+  setError: (value: boolean) => void;
   handleClose: () => void;
   handleOpen: () => void;
   handleNext: () => Promise<void>;
@@ -88,10 +89,6 @@ export const BillingInfoProvider = ({ children }: { children: ReactNode }) => {
       if (!res || res.error) {
         setErrorMessage(res.error);
         setError(true);
-      } else if (!res || res.error) {
-        setErrorMessage("There are no unpaid items found");
-        setError(true);
-        setStep("advancepaybilling");
       } else {
         setBill(new Bill(res));
         setStep("billinfo");
@@ -131,6 +128,7 @@ export const BillingInfoProvider = ({ children }: { children: ReactNode }) => {
         refno,
         setRefno,
         setErrorMessage,
+        setError,
         setValidate,
         setLoading,
         setStep,

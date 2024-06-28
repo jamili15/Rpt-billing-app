@@ -31,14 +31,11 @@ const AdvancePayBilling: React.FC<AdvancePayBillingProps> = () => {
         refno: refno,
         billtoyear: year,
       });
-      console.log("RESULT", res);
       setBill(new Bill(res));
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log("BIll", bill);
 
   return (
     <div className="w-full flex flex-col gap-5">

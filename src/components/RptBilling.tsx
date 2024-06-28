@@ -39,8 +39,7 @@ const RptBilling: React.FC<BillInfoProps> = ({
 
   if (step === "refno") {
     subTitle = "Initial Information";
-    description =
-      "Enter a valid Business Identification Number (BIN) or Application No.";
+    description = "Please enter a valid Tax Declaration No.";
   } else if (step === "advancepaybilling") {
     subTitle = "Initial Information";
     description =
@@ -90,7 +89,7 @@ const RptBilling: React.FC<BillInfoProps> = ({
                 </div>
               )}
               {step === "advancepaybilling" && <AdvancePayBilling />}
-              {step === "billinfo" && <BillingInfo refno={refno} />}
+              {step === "billinfo" && <BillingInfo />}
               <div className="bg-gray-300 w-full h-[0.5px] mt-8" />
               <div className="flex items-center justify-between px-5 w-full ">
                 <Button
