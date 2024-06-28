@@ -5,14 +5,12 @@ const SECRET_KEY = "U0VDUkVUX2tleQ";
 export const generateOtp = async ({
   partnerid,
   contact,
-  connection,
 }: {
   partnerid: string;
   contact: Record<string, any>;
-  connection: string;
 }) => {
   try {
-    const svc = Service.lookup(`${partnerid}:VerifyEmailService`, connection);
+    const svc = Service.lookup(`${partnerid}:VerifyEmailService`, "epayment");
     const otp = await svc.invoke("verifyEmail", contact);
     return await encryptKey(otp);
   } catch (error) {

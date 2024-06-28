@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ServiceOptionType } from "./service";
@@ -131,13 +132,11 @@ export const postData = async (
   }
 ) => {
   try {
-    console.log("POST URL: ", url);
     const res = await fetch(url, {
       method: "POST",
       body: JSON.stringify(data),
       ...options,
     });
-
     if (res.ok) {
       return await res.json();
     } else {
@@ -278,6 +277,7 @@ const CreateAsyncInternal = (
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [value, setValue] = useState<any | undefined>();
+  const router = useRouter();
 
   const invoke = (...args: any[]) => {
     setLoading(true);
@@ -296,6 +296,9 @@ const CreateAsyncInternal = (
         } else {
           setValue(res.data);
           setError(undefined);
+          if (res.data.redirect) {
+            router.push(res.data.url);
+          }
           return res.data;
         }
       })
