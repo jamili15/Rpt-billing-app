@@ -11,11 +11,21 @@ interface AlertProps {
   open: boolean;
   close: () => void;
   confirm: () => void;
+  caption: string;
+  dialogText?: string;
+  className?: string;
 }
 
-const Alert: React.FC<AlertProps> = ({ open, close, confirm }) => {
+const Alert: React.FC<AlertProps> = ({
+  open,
+  close,
+  confirm,
+  caption,
+  dialogText,
+  className,
+}) => {
   return (
-    <>
+    <div className={` ${className}`}>
       <Dialog
         open={open}
         onClose={close}
@@ -23,11 +33,11 @@ const Alert: React.FC<AlertProps> = ({ open, close, confirm }) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" className="pr-32">
-          Email Verification
+          {caption}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Resend OTP?
+            {dialogText}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -49,7 +59,7 @@ const Alert: React.FC<AlertProps> = ({ open, close, confirm }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 };
 

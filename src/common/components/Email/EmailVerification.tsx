@@ -21,7 +21,7 @@ import { usePartnerContext } from "./PartnerModel";
 // } & PageFlowProps;
 
 const EmailVerification = (props: any) => {
-  const { channelId } = usePartnerContext();
+  const { partner } = usePartnerContext();
   const [mode, setMode] = useState<string>("email");
   const [open, setOpen] = useState<boolean>(false);
   const [error, setError] = useState("");
@@ -35,7 +35,7 @@ const EmailVerification = (props: any) => {
     setLoading(true);
     try {
       const otp = await svc?.invoke("generateOtp", {
-        partnerid: channelId,
+        partnerid: partner?.channelid,
         contact: {
           email: props.formValues.email,
           phone: props.formValues.phone,
@@ -130,13 +130,23 @@ const EmailVerification = (props: any) => {
           validate={required}
           variant="standard"
         />
-        <Button
-          className="flex bg-white hover:bg-transparent mt-5 text-gray-500"
-          onClick={handleDialog}
-        >
-          Resend OTP
-        </Button>
-        <Dialog open={open} close={handleDialog} confirm={handleEmailNext} />
+        <div className="flex justify-end mt-5">
+          <Button
+            className="flex bg-white hover:bg-transparent mt-5 text-gray-500"
+            onClick={handleDialog}
+            variant="text"
+          >
+            Resend OTP
+          </Button>
+        </div>
+        <Dialog
+          open={open}
+          close={handleDialog}
+          confirm={handleEmailNext}
+          caption={"Email Verification"}
+          dialogText="Resend OTP"
+        />
+        <div className="bg-gray-300 w-full h-[0.5px] mt-8" />
         <ActionBar>
           <Button
             onClick={handleBack}
