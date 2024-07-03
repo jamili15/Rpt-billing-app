@@ -148,16 +148,15 @@ const BillingInfo = (props: any) => {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <div>
-          <Button
-            className="!border border-solid shadow-sm  bg-transparent text-[#6200ee] hover:bg-[#6200ee12] hover:shadow-md mt-5"
-            variant="contained"
-            size="small"
-            onClick={handleOpen}
-          >
-            Pay option
-          </Button>
-        </div>
+        <Button
+          className="!border border-solid shadow-sm  bg-transparent text-[#6200ee] hover:bg-[#6200ee12] hover:shadow-md mt-6 w-[17%]"
+          variant="contained"
+          size="small"
+          onClick={handleOpen}
+        >
+          Pay option
+        </Button>
+
         <Modal open={open} onClose={handleOpen}>
           <Typography variant="h6" component="h2">
             Pay Options
