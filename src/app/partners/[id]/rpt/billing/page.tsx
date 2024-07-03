@@ -20,11 +20,11 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [setId]);
 
   const pages = [
-    // {
-    //   name: "Email Verification",
-    //   caption: "Email Verification",
-    //   Component: EmailVerification,
-    // },
+    {
+      name: "Email Verification",
+      caption: "Email Verification",
+      Component: EmailVerification,
+    },
     {
       name: "Ref no",
       caption: "Initial Information",
