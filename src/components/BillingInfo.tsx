@@ -218,7 +218,8 @@ const BillingInfo = (props: any) => {
           </Box>
         </Modal>
       </div>
-      <ActionBar>
+      <ActionBar className="justify-between mt-12 relative">
+        <div className=" bg-gray-300 absolute bottom-14 h-[1px] w-full" />
         <Button
           onClick={props.onCancel}
           variant="text"
