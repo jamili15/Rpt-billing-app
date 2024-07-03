@@ -227,7 +227,7 @@ const BillingInfo = (props: any) => {
         >
           Back
         </Button>
-        <Button onClick={props.onSubmit}>Next</Button>
+        <Button onClick={props.onSubmit}>Confirm Payment</Button>
       </ActionBar>
     </Card>
   );
