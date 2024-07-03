@@ -1,65 +1,49 @@
 "use client";
 
-import EmailVerification from "@/common/components/EmailVerification";
-import { usePartnerContext } from "@/common/components/PartnerModel";
-import PayerInfo from "@/common/components/PayerInfo";
+import EmailVerification from "@/common/components/Email/EmailVerification";
+import { usePartnerContext } from "@/common/components/Email/PartnerModel";
+import PayerInfo from "@/common/components/Payer/PayerInfo";
 import MasterLayout from "@/common/layouts/MasterLayout";
-import { lookupService } from "@/common/lib/client";
-import RptBilling from "@/components/RptBilling";
-import { useBillingContext } from "@/components/RptContextController";
-import { useEffect, useState } from "react";
+import PageFlow from "@/common/ui/PageFlow";
+import BillingInfo from "@/components/BillingInfo";
+import RefAccount from "@/components/RefNo";
+import { useEffect } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { title, setId, resources } = usePartnerContext();
-  const [step, setStep] = useState<string>("billing");
-  const { bill } = useBillingContext();
-
-  const handler = () => {
-    if (step === "email") {
-      setStep("billing");
-    } else if (step === "billing") {
-      setStep("payerinfo");
-    }
-  };
-
-  const onCancel = () => {
-    if (step === "billing") {
-      setStep("email");
-    } else if (step === "payerinfo") {
-      setStep("billing");
-    }
-  };
+  const { partner, setId, resources } = usePartnerContext();
+  let moduleTitle = "Realty Tax Online Billing and Payment";
 
   useEffect(() => {
     if (params.id) {
       setId(params.id);
     }
-  }, [params.id, setId]);
+  }, [setId]);
 
-  let moduleTitle = "Realty Tax Online Billing and Payment";
-
+  const pages = [
+    // {
+    //   name: "Email Verification",
+    //   caption: "Email Verification",
+    //   Component: EmailVerification,
+    // },
+    {
+      name: "Ref no",
+      caption: "Initial Information",
+      Component: RefAccount,
+    },
+    {
+      name: "Billing Information",
+      caption: "Billing Information",
+      Component: BillingInfo,
+    },
+    {
+      name: "Payer Information",
+      caption: "Confirm Transaction",
+      Component: PayerInfo,
+    },
+  ];
   return (
-    <MasterLayout lgucaption={title} lguLogo={resources}>
-      {step === "email" && (
-        <EmailVerification moduleTitle={moduleTitle} onSuccess={handler} />
-      )}
-
-      {step === "billing" && (
-        <RptBilling
-          moduleTitle={moduleTitle}
-          onCancel={onCancel}
-          onSuccess={handler}
-        />
-      )}
-
-      {step === "payerinfo" && (
-        <PayerInfo
-          moduleTitle={moduleTitle}
-          onSuccess={() => {}}
-          onCancel={onCancel}
-          billAmount={bill?.amount ?? 0}
-        />
-      )}
+    <MasterLayout lgucaption={partner?.title} lguLogo={resources}>
+      <PageFlow title={moduleTitle} pages={pages} />
     </MasterLayout>
   );
 }

@@ -1,20 +1,22 @@
 import React from "react";
-import { useBillingContext } from "./RptContextController";
+
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { usePartnerContext } from "@/common/components/PartnerModel";
+
 import { lookupService } from "@/common/lib/client";
-import Bill from "@/model/Bill";
+import { Bill } from "@/types";
+import { usePartnerContext } from "@/common/components/Email/PartnerModel";
 
 interface AdvancePayBillingProps {}
 
-const AdvancePayBilling: React.FC<AdvancePayBillingProps> = () => {
-  const { channelId } = usePartnerContext();
+const AdvancePayBilling: React.FC<AdvancePayBillingProps> = (props: any) => {
+  const bill = props.formValues.bill;
+  const { partner } = usePartnerContext();
   const svc = lookupService("RealTaxBillingService");
-  const { bill, setBill } = useBillingContext();
+
   const [year, setYear] = React.useState(2025);
 
   const handleChangeYear = async (event: SelectChangeEvent) => {
@@ -24,14 +26,14 @@ const AdvancePayBilling: React.FC<AdvancePayBillingProps> = () => {
   };
 
   const handlePayYearChange = async (year: number) => {
-    const refno = bill?.tdno;
+    const refno = bill?.info.tdno;
     try {
-      const res = await svc?.invoke("getBilling", {
-        partnerid: channelId,
+      const res: Bill = await svc?.invoke("getBilling", {
+        partnerid: partner?.channelid,
         refno: refno,
         billtoyear: year,
       });
-      setBill(new Bill(res));
+      props.form.change("bill", res);
     } catch (error) {
       console.log(error);
     }
