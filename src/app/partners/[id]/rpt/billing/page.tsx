@@ -16,7 +16,7 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  const { partner, setId, resources, id } = usePartnerContext();
+  const { partner, setId, resources } = usePartnerContext();
   const moduleTitle = "Realty Tax Online Billing and Payment";
   useEffect(() => {
     if (params.id) {
@@ -25,11 +25,11 @@ export default function Page({ params }: PageProps) {
   }, [setId]);
 
   const pages = [
-    // {
-    //   name: "Email Verification",
-    //   caption: "Email Verification",
-    //   Component: EmailVerification,
-    // },
+    {
+      name: "Email Verification",
+      caption: "Email Verification",
+      Component: EmailVerification,
+    },
     {
       name: "Ref no",
       caption: "Initial Information",
@@ -47,11 +47,7 @@ export default function Page({ params }: PageProps) {
     },
   ];
   return (
-    <MasterLayout
-      lgucaption={partner?.title}
-      lguLogo={resources}
-      href={`http://192.168.2.9:90/partners/${id}`}
-    >
+    <MasterLayout lgucaption={partner?.title} lguLogo={resources}>
       <PageFlow title={moduleTitle} pages={pages} />
     </MasterLayout>
   );
