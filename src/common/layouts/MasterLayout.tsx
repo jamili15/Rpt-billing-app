@@ -22,7 +22,7 @@ const MasterLayout: React.FC<HomeProps> = ({
       <Header
         lguLogo={lguLogo}
         lgucaption={lgucaption}
-        href={`http://192.168.2.9:9090/partners/${id}`}
+        href={`/partners/${id}`}
       />
       <div className="flex flex-col flex-1 pt-20">
         <main className="w-full flex justify-center items-start py-5 flex-1">
@@ -32,7 +32,7 @@ const MasterLayout: React.FC<HomeProps> = ({
       <Footer
         copyright={"@Copyright 2024 "}
         filipizen="Filipizen"
-        href={`http://192.168.2.9:9090/partners`}
+        href={`/partners`}
       />
     </div>
   );
