@@ -9,10 +9,15 @@ import BillingInfo from "@/components/BillingInfo";
 import RefAccount from "@/components/RefNo";
 import { useEffect } from "react";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { partner, setId, resources } = usePartnerContext();
-  let moduleTitle = "Realty Tax Online Billing and Payment";
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
 
+export default function Page({ params }: PageProps) {
+  const { partner, setId, resources } = usePartnerContext();
+  const moduleTitle = "Realty Tax Online Billing and Payment";
   useEffect(() => {
     if (params.id) {
       setId(params.id);
@@ -20,11 +25,11 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [setId]);
 
   const pages = [
-    {
-      name: "Email Verification",
-      caption: "Email Verification",
-      Component: EmailVerification,
-    },
+    // {
+    //   name: "Email Verification",
+    //   caption: "Email Verification",
+    //   Component: EmailVerification,
+    // },
     {
       name: "Ref no",
       caption: "Initial Information",

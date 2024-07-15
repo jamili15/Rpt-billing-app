@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Currency from "./ui/Currency";
 import { Button } from "@/common/io/Button";
 import Modal from "@/common/ui/Modal";
@@ -17,9 +17,9 @@ import Card from "@/common/ui/Card";
 import { ActionBar } from "@/common/ui/ActionBar";
 
 const BillingInfo = (props: any) => {
-  const bill = props.formValues.bill;
-  const [qtr, setQtr] = React.useState<number | undefined>(bill?.info.toqtr);
-  const [year, setYear] = React.useState<number | undefined>(bill?.info.toyear);
+  const bill: Bill = props.formValues.bill;
+  const [qtr, setQtr] = React.useState<number | undefined>(bill?.toqtr);
+  const [year, setYear] = React.useState<number | undefined>(bill?.toyear);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,19 +40,19 @@ const BillingInfo = (props: any) => {
     if (selectedYear >= fromYear && selectedYear <= 2028) {
       setQtr(4);
     } else {
-      setQtr(bill?.info.fromqtr);
+      setQtr(bill?.fromqtr);
     }
   };
 
-  const fromYear = Number(bill?.info.fromyear);
+  const fromYear = Number(bill?.fromyear);
   const billYear = [];
   for (let i = fromYear; i <= 2028; i++) {
     billYear.push(i);
   }
 
-  const fromQtr = Number(bill?.info.fromqtr);
+  const fromQtr = Number(bill?.fromqtr);
   const billQtr = [];
-  if (year === bill?.info.fromyear) {
+  if (year === bill?.fromyear) {
     for (let q = fromQtr; q <= 4; q++) {
       billQtr.push(q);
     }
@@ -65,12 +65,10 @@ const BillingInfo = (props: any) => {
     try {
       const res: Bill = await svc?.invoke("getBilling", {
         partnerid: partner?.channelid,
-        refno: bill?.info.tdno,
+        refno: bill?.tdno,
         billtoqtr: qtr,
         billtoyear: year,
       });
-
-      console.log("RES", res);
       if (!res || res.error) {
         setError(res.error);
         setOpen(false);
@@ -88,34 +86,32 @@ const BillingInfo = (props: any) => {
 
   const dataInfo = (bill: Bill) => [
     {
-      value: bill?.info.billno,
+      value: bill?.billno,
       label: "Bill No.",
     },
     {
-      value: bill?.info.billdate,
+      value: bill?.billdate,
       label: "Bill Date",
     },
-    { value: bill?.info.tdno, label: "TD No." },
-    { value: bill?.info.fullpin, label: "PIN" },
+    { value: bill?.tdno, label: "TD No." },
+    { value: bill?.fullpin, label: "PIN" },
     {
-      value: bill?.info.taxpayer.name,
+      value: bill?.taxpayer.name,
       label: "Property Owner",
     },
     {
-      value: bill?.info.taxpayer.address,
+      value: bill?.taxpayer.address,
       label: "Address",
     },
     {
-      value: bill?.info.billperiod,
+      value: bill?.billperiod,
       label: "Billing Period",
     },
     {
-      value: <Currency amount={bill?.info.amount ?? 0} currency="Php" />,
+      value: <Currency amount={bill?.amount ?? 0} currency="Php" />,
       label: "Amount Due",
     },
   ];
-
-  console.log("BILL INFO", bill);
 
   return (
     <Card title={props.title} subTitleText={props.page.caption} error={error}>

@@ -1,4 +1,5 @@
 import Service from "@/common/lib/server/remote-service";
+import { Bill } from "@/types";
 
 export const getBilling = async ({
   partnerid,
@@ -26,10 +27,16 @@ export const getBilling = async ({
       showdetails,
     });
 
+    const data: Bill = {
+      ...bill.info,
+      particulars: `Real Property Tax TD No. ${bill?.info.tdno} Payment for: ${bill?.info.billperiod}`,
+      txntype: "rptcol",
+    };
+
     if (bill.status === "ERROR") {
       return { code: "01", error: bill.msg };
     }
-    return bill;
+    return data;
   } catch (err) {
     return {
       code: "02",
