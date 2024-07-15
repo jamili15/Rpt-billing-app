@@ -1,13 +1,21 @@
+import { Url } from "next/dist/shared/lib/router/router";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface HeaderProps {
   lgucaption?: string;
   lguLogo: string;
   className?: string;
+  href?: Url;
 }
 
-const Header: React.FC<HeaderProps> = ({ lgucaption, lguLogo, className }) => {
+const Header: React.FC<HeaderProps> = ({
+  lgucaption,
+  lguLogo,
+  className,
+  href,
+}) => {
   const logoSrc = lguLogo ? lguLogo : "/lgu-logo.png";
 
   return (
@@ -16,17 +24,19 @@ const Header: React.FC<HeaderProps> = ({ lgucaption, lguLogo, className }) => {
     >
       <div className="flex gap-5 items-center h-full pl-16 text-xl text-white font-bold">
         <div>
-          <Image
-            src={logoSrc}
-            height={45}
-            width={45}
-            quality={100}
-            alt={"lgu-logo"}
-            className="bg-white rounded-full"
-            loading="eager"
-            priority
-            unoptimized
-          />
+          <Link href={href || ""}>
+            <Image
+              src={logoSrc}
+              height={45}
+              width={45}
+              quality={100}
+              alt={"lgu-logo"}
+              className="bg-white rounded-full"
+              loading="eager"
+              priority
+              unoptimized
+            />
+          </Link>
         </div>
         <p>{lgucaption}</p>
       </div>
