@@ -1,7 +1,6 @@
 import React from "react";
 import Footer from "./Footer";
 import Header from "./Header";
-import { Url } from "next/dist/shared/lib/router/router";
 import { usePartnerContext } from "../components/Email/PartnerModel";
 
 interface HomeProps {
