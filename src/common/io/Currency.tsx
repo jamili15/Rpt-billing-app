@@ -23,16 +23,18 @@ const Currency: React.FC<CurrencyComponentProps> = ({
       return "Invalid Amount";
     }
 
-    const decimalPlaces = (numericAmount.toString().split(".")[1] || []).length;
-
-    const options = {
+    const options: Intl.NumberFormatOptions = {
       style: currency ? "currency" : "decimal",
       currency: currency === "Php" || currency === "USD" ? currency : undefined,
       minimumFractionDigits: decimal,
       maximumFractionDigits: decimal,
     };
 
-    const formattedValue = numericAmount.toLocaleString(undefined, options);
+    const locale = "en-US"; // You can change this to any locale you prefer
+
+    const formattedValue = new Intl.NumberFormat(locale, options).format(
+      numericAmount
+    );
 
     return formattedValue;
   };
@@ -44,7 +46,7 @@ const Currency: React.FC<CurrencyComponentProps> = ({
           {caption} :
         </span>
       )}
-      <div className={`${classname}`}>{formattedAmount()}</div>
+      <div className={classname}>{formattedAmount()}</div>
     </>
   );
 };

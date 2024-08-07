@@ -12,9 +12,13 @@ export const generateOtp = async ({
   try {
     const svc = Service.lookup(`${partnerid}:VerifyEmailService`, "epayment");
     const otp = await svc.invoke("verifyEmail", contact);
+
+    if (otp.status === "ERROR") {
+      return { code: "01", error: otp.msg };
+    }
     return await encryptKey(otp);
   } catch (error) {
-    console.log("generate otp error:", error);
+    return { code: "01", error: error };
   }
 };
 
@@ -29,7 +33,7 @@ export const verifyOtp = async ({ otp, key }: { otp: string; key: string }) => {
   } catch (err) {
     return {
       status: "ERROR",
-      error: "Unable to validate OTP. Please try again.",
+      error: err,
     };
   }
 };

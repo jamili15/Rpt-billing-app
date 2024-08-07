@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({
   className,
   href,
 }) => {
-  const logoSrc = lguLogo ? lguLogo : "/lgu-logo.png";
+  const logoSrc = lguLogo ? lguLogo : "/assets/partner/lgu-logo.png";
 
   return (
     <header

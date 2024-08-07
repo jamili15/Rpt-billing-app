@@ -1,14 +1,16 @@
 import { createFetchAsync, makeRequest } from "./fetch";
 
+const DOMAIN_PATH = process.env.NEXT_PUBLIC_MODULE_DOMAIN_PATH || "";
+
 export const getService = (data: {}) => {
-  return makeRequest("/api/service", {
+  return makeRequest(`${DOMAIN_PATH}/api/service`, {
     method: "GET",
     data,
   });
 };
 
 export const getPostService = (data: {}) => {
-  return makeRequest("/api/service", {
+  return makeRequest(`${DOMAIN_PATH}/api/service`, {
     method: "POST",
     data: data,
   });

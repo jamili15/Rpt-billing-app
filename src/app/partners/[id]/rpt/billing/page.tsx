@@ -16,7 +16,7 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  const { partner, setId, resources } = usePartnerContext();
+  const { partner, setId, resources, id } = usePartnerContext();
   const moduleTitle = "Realty Tax Online Billing and Payment";
   useEffect(() => {
     if (params.id) {
@@ -44,6 +44,10 @@ export default function Page({ params }: PageProps) {
       name: "Payer Information",
       caption: "Confirm Transaction",
       Component: PayerInfo,
+      options: {
+        cancelUrl: `${process.env.NEXT_PUBLIC_APP_SERVER_URL}/partners/${id}/rpt/billing`,
+        successUrl: `${process.env.NEXT_PUBLIC_APP_SERVER_URL}/partners/${id}`,
+      },
     },
   ];
   return (

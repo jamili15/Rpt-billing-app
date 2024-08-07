@@ -34,16 +34,7 @@ export const PartnerProvider: React.FC<PartnerContextTypeProps> = ({
           name: location[1],
         });
         setPartner(partner);
-        let hostUrl = process.env.NEXT_PUBLIC_FILIPIZEN_HOST;
-        if (hostUrl) {
-          if (!hostUrl.startsWith("http://")) {
-            hostUrl = "http://" + hostUrl;
-            setResources(`${hostUrl}/resources/${partner.channelid}.png`);
-          }
-          setResources(`${hostUrl}/resources/${partner.channelid}.png`);
-        } else {
-          console.error("FILIPIZEN_HOST is not defined.");
-        }
+        setResources(`/assets/partner/${partner.channelid}.png`);
       }
     };
     loadData();

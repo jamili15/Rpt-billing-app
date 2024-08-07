@@ -1,6 +1,5 @@
 import { Button } from "@/common/io/Button";
 import { Email } from "@/common/io/Email";
-
 import { Text } from "@/common/io/Text";
 import { lookupService } from "@/common/lib/client";
 import { ActionBar } from "@/common/ui/ActionBar";
@@ -8,8 +7,10 @@ import Card from "@/common/ui/Card";
 import Dialog from "@/common/ui/Dialog";
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
-import { required, validateEmail } from "../../validators";
+import { required, validateEmail, validatePhone } from "../../validators";
 import { usePartnerContext } from "./PartnerModel";
+import { timeout } from "@/common/helpers";
+import { phoneNumberFormatter } from "@/common/formatter";
 
 // type PageFlowProps = {
 //   formValues: Record<string, any>;
@@ -34,6 +35,8 @@ const EmailVerification = (props: any) => {
   const handleEmailNext = async () => {
     setLoading(true);
     try {
+      await timeout(1);
+      props.form.change("otp", undefined);
       const otp = await svc?.invoke("generateOtp", {
         partnerid: partner?.channelid,
         contact: {
@@ -41,9 +44,15 @@ const EmailVerification = (props: any) => {
           phone: props.formValues.phone,
         },
       });
-      props.form.change("otp", otp);
-      setMode("otp");
-      setOpen(false);
+
+      if (!otp || otp.error) {
+        setError(otp.error);
+      } else {
+        props.form.change("otp", otp);
+        setMode("otp");
+        setOpen(false);
+        setError("");
+      }
     } catch (error) {
       console.log("error => ", error);
     }
@@ -51,7 +60,13 @@ const EmailVerification = (props: any) => {
   };
 
   const handleOtpNext = async () => {
+    if (props.hasValidationErrors) {
+      return;
+    }
+
+    setLoading(true);
     try {
+      await timeout(1);
       const otp = props.formValues.otp;
       const res = await svc?.invoke("verifyOtp", {
         key: otp.key,
@@ -64,6 +79,8 @@ const EmailVerification = (props: any) => {
       }
     } catch (error) {
       console.log("error => ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,6 +96,7 @@ const EmailVerification = (props: any) => {
   if (mode === "email") {
     return (
       <Card
+        key={mode}
         title={props.title}
         subTitleText={props.page.caption}
         description={descriptionText}
@@ -89,13 +107,19 @@ const EmailVerification = (props: any) => {
           label="Email Address"
           validate={validateEmail}
           variant="standard"
+          autoComplete="off"
         />
         <Text
           name="phone"
-          label="Phone Number"
+          label="Mobile Number"
           placeholder="(0000) 000-0000"
           variant="standard"
+          onChange={(e) =>
+            props.form.change("phone", phoneNumberFormatter(e.target.value))
+          }
+          autoComplete="off"
         />
+        <div className="bg-gray-300 w-full h-[0.5px] mt-8" />
         <ActionBar>
           <Button
             onClick={props.movePrevStep}
@@ -105,6 +129,7 @@ const EmailVerification = (props: any) => {
             Back
           </Button>
           <Button
+            type="submit"
             onClick={handleEmailNext}
             disabled={props.hasValidationErrors || loading}
           >
@@ -119,6 +144,7 @@ const EmailVerification = (props: any) => {
   if (mode === "otp") {
     return (
       <Card
+        key={mode}
         title={props.title}
         subTitleText={props.page.caption}
         description={descriptionText}
@@ -129,6 +155,7 @@ const EmailVerification = (props: any) => {
           label="OTP"
           validate={required}
           variant="standard"
+          autoComplete="off"
         />
         <div className="flex justify-end mt-5">
           <Button
@@ -155,8 +182,13 @@ const EmailVerification = (props: any) => {
           >
             Back
           </Button>
-          <Button onClick={handleOtpNext} disabled={props.hasValidationErrors}>
+          <Button
+            type="submit"
+            onClick={handleOtpNext}
+            disabled={props.hasValidationErrors || loading}
+          >
             Next
+            {loading ? <CircularProgress thickness={5} size={24} /> : ""}
           </Button>
         </ActionBar>
       </Card>

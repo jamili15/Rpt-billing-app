@@ -1,3 +1,5 @@
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Form as FinalForm } from "react-final-form";
@@ -12,6 +14,8 @@ type PageFlowProps = {
   ) => Record<string, any>;
   pages: PageFlowPage[];
   initialStep?: number;
+  activeStep?: number;
+  handleStep?: (step: number) => void;
 };
 
 type PageFlowPage = {
@@ -21,6 +25,7 @@ type PageFlowPage = {
   onSubmit?: (values: Record<string, any>) => Record<string, any> | null;
   onCancel?: () => void;
   validate?: (values: Record<string, any>) => Record<string, any> | null;
+  options?: Record<string, any>;
 };
 
 export const PageFlow: React.FC<PageFlowProps> = ({
@@ -29,15 +34,17 @@ export const PageFlow: React.FC<PageFlowProps> = ({
   validate = (values: Record<string, any>) => ({}),
   initialValues = {},
   initialStep = 0,
+  activeStep = 0,
+  handleStep,
 }) => {
-  const [currentStep, setCurrentStep] = useState(initialStep);
-  const [currentPage, setCurrentPage] = useState(pages[initialStep]);
+  const [currentStep, setCurrentStep] = useState(activeStep);
+  const [currentPage, setCurrentPage] = useState(pages[activeStep]);
 
   let Component = currentPage?.Component;
 
   useEffect(() => {
-    setCurrentPage(() => pages[currentStep]);
-  }, [currentStep]);
+    setCurrentPage(() => pages[activeStep || currentStep]);
+  }, [activeStep || currentStep]);
 
   const hasError = (errors: Record<string, any>) =>
     Object.keys(errors).length > 0;
@@ -65,18 +72,34 @@ export const PageFlow: React.FC<PageFlowProps> = ({
   const moveNextStep = async (values: Record<string, any>) => {
     const nextStep = await executeStep(currentPage?.onSubmit, values);
     if (nextStep >= 0) {
-      setCurrentStep(nextStep);
+      if (handleStep) {
+        handleStep(nextStep);
+      } else {
+        setCurrentStep(nextStep);
+      }
     } else {
-      setCurrentStep(Math.min(currentStep + 1, pages.length - 1));
+      if (handleStep) {
+        handleStep(Math.min(activeStep + 1, pages.length - 1));
+      } else {
+        setCurrentStep(Math.min(currentStep + 1, pages.length - 1));
+      }
     }
   };
 
   const movePrevStep = async (values: Record<string, any>) => {
     const nextStep = await executeStep(currentPage?.onCancel, values);
     if (nextStep >= 0) {
-      setCurrentStep(nextStep);
+      if (handleStep) {
+        handleStep(nextStep);
+      } else {
+        setCurrentStep(nextStep);
+      }
     } else {
-      setCurrentStep(Math.max(currentStep - 1, 0));
+      if (handleStep) {
+        handleStep(Math.max(activeStep - 1, 0));
+      } else {
+        setCurrentStep(Math.max(currentStep - 1, 0));
+      }
     }
   };
 
@@ -87,31 +110,37 @@ export const PageFlow: React.FC<PageFlowProps> = ({
   if (!currentPage) return <></>;
 
   return (
-    <FinalForm initialValues={initialValues} onSubmit={formSubmitHandler}>
-      {({
-        handleSubmit,
-        form,
-        submitting,
-        values,
-        error,
-        submitError,
-        hasValidationErrors,
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <Component
-            title={title}
-            form={form}
-            formValues={values}
-            error={error || submitError}
-            submitting={submitting}
-            onSubmit={() => moveNextStep(values)}
-            onCancel={() => movePrevStep(values)}
-            page={{ name: currentPage.name, caption: currentPage.caption }}
-            hasValidationErrors={hasValidationErrors}
-          />
-        </form>
-      )}
-    </FinalForm>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <FinalForm initialValues={initialValues} onSubmit={formSubmitHandler}>
+        {({
+          handleSubmit,
+          form,
+          submitting,
+          values,
+          error,
+          submitError,
+          hasValidationErrors,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <Component
+              title={title}
+              form={form}
+              formValues={values}
+              error={error || submitError}
+              submitting={submitting}
+              onSubmit={() => moveNextStep(values)}
+              onCancel={() => movePrevStep(values)}
+              page={{
+                name: currentPage.name,
+                caption: currentPage.caption,
+                options: currentPage.options,
+              }}
+              hasValidationErrors={hasValidationErrors}
+            />
+          </form>
+        )}
+      </FinalForm>
+    </LocalizationProvider>
   );
 };
 

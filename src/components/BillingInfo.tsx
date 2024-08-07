@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Currency from "./ui/Currency";
 import { Button } from "@/common/io/Button";
 import Modal from "@/common/ui/Modal";
 import Box from "@mui/material/Box";
@@ -15,6 +14,8 @@ import { Bill } from "@/types";
 import { Label } from "@/common/io/Label";
 import Card from "@/common/ui/Card";
 import { ActionBar } from "@/common/ui/ActionBar";
+import Currency from "@/common/io/Currency";
+import { timeout } from "@/common/helpers";
 
 const BillingInfo = (props: any) => {
   const bill: Bill = props.formValues.bill;
@@ -63,6 +64,7 @@ const BillingInfo = (props: any) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      await timeout(1);
       const res: Bill = await svc?.invoke("getBilling", {
         partnerid: partner?.channelid,
         refno: bill?.tdno,
@@ -108,7 +110,7 @@ const BillingInfo = (props: any) => {
       label: "Billing Period",
     },
     {
-      value: <Currency amount={bill?.amount ?? 0} currency="Php" />,
+      value: <Currency amount={bill?.amount || 0} currency="Php" />,
       label: "Amount Due",
     },
   ];
@@ -217,13 +219,17 @@ const BillingInfo = (props: any) => {
       <ActionBar className="justify-between mt-12 relative">
         <div className=" bg-gray-300 absolute bottom-14 h-[1px] w-full" />
         <Button
-          onClick={props.onCancel}
+          onClick={() => {
+            props.onCancel?.();
+          }}
           variant="text"
           className="font-bold text-[#6200EE] bg-white hover:bg-[#b898e626] px-5"
         >
           Back
         </Button>
-        <Button onClick={props.onSubmit}>Confirm Payment</Button>
+        <Button type="submit" onClick={props.onSubmit}>
+          Confirm Payment
+        </Button>
       </ActionBar>
     </Card>
   );
