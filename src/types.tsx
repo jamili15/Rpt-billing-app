@@ -1,4 +1,4 @@
-export type Bill = {
+sexport type Bill = {
   billno: string;
   billdate: number;
   billtoyear: string;
