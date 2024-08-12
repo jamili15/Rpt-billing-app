@@ -1,4 +1,4 @@
-sexport type Bill = {
+export type Bill = {
   billno: string;
   billdate: number;
   billtoyear: string;
@@ -31,7 +31,6 @@ sexport type Bill = {
   items: BillItem[];
   particulars: string;
   txntype: string;
-
   error: string;
 };
 

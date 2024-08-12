@@ -1,7 +1,7 @@
 // middleware.js
 import { NextResponse } from 'next/server';
 
-const DOMAIN_PATH = process.env.NEXT_PUBLIC_MODULE_DOMAIN_PATH || "";
+const DOMAIN_PATH = process.env.NEXT_PUBLIC_APP_CONTEXT_PATH || "";
 
 export function middleware(req) {
     const url = req.nextUrl.clone();
