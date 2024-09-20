@@ -16,7 +16,7 @@ const Card: React.FC<CardProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-white w-[700px] py-5 flex items-center justify-center rounded-md shadow-md text-[16px]">
+    <div className="bg-white w-[700px] max-sm:w-[320px] py-5 flex items-center justify-center rounded-md shadow-md text-[16px]">
       <div className="p-10 w-full">
         <div className="flex flex-col gap-2 pb-2">
           <h1 className="capitalize text-[26.4px] font-bold ">{title}</h1>

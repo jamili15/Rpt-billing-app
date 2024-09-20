@@ -37,10 +37,11 @@ export const getBilling = async ({
       return { code: "01", error: bill.msg };
     }
     return data;
-  } catch (err) {
+  } catch (error) {
+    console.error("Error fetching billing:", error);
     return {
-      code: "02",
-      error: err,
+      code: "01",
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 };

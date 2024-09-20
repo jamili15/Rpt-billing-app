@@ -1,6 +1,6 @@
 import { createFetchAsync, makeRequest } from "./fetch";
 
-const DOMAIN_PATH = process.env.NEXT_PUBLIC_MODULE_DOMAIN_PATH || "";
+const DOMAIN_PATH = process.env.NEXT_PUBLIC_APP_CONTEXT_PATH || "";
 
 export const getService = (data: {}) => {
   return makeRequest(`${DOMAIN_PATH}/api/service`, {

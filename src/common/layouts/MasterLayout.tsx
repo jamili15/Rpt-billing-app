@@ -1,7 +1,7 @@
 import React from "react";
+import { usePartnerContext } from "../components/Email/PartnerModel";
 import Footer from "./Footer";
 import Header from "./Header";
-import { usePartnerContext } from "../components/Email/PartnerModel";
 
 interface HomeProps {
   children: React.ReactNode;
