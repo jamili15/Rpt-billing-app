@@ -13,8 +13,10 @@ export type Bill = {
   titleno: string | null;
   classification: string;
   cadastrallotno: string;
-  administratorname: string | null;
-  administratoraddress: string | null;
+  administrator: {
+    name: string | null;
+    address: string | null;
+  };
   owner: Owner;
   totalav: number;
   totalmv: number;
@@ -35,12 +37,16 @@ export type Bill = {
 };
 
 export type BillItem = {
-  objid: string;
-  code: string;
-  title: string;
-  fundobjid: string;
-  fundcode: string;
-  fundtitle: string;
+  item: {
+    objid: string;
+    code: string;
+    title: string;
+  };
+  fund: {
+    objid: string;
+    code: string;
+    title: string;
+  };
   revtype: string;
   revperiod: number;
   amount: number;
